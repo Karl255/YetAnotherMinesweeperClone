@@ -43,9 +43,9 @@ namespace YetAnotherMinesweeperClone
 				Minefield.RowDefinitions.Add(new RowDefinition() { Height = GridLength.Auto });
 				for (int j = 0; j < 9; j++)
 				{
-					Image tile = new Image() 
+					Image tile = new Image()
 					{
-						Source = new BitmapImage(new Uri("Assets/Tile.png", UriKind.Relative))
+						Source = Textures.Tiles.Covered
 					};
 					tile.SetBinding(WidthProperty, scaleBinding);
 					tile.SetBinding(HeightProperty, scaleBinding);

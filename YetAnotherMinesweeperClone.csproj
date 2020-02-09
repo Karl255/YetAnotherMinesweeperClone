@@ -7,10 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Assets\FullSkin.png" />
     <None Remove="Tile.png" />
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Assets\FullSkin.png" />
     <Resource Include="Assets\Tile.png" />
   </ItemGroup>
 
