@@ -6,4 +6,12 @@
     <UseWPF>true</UseWPF>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Remove="Tile.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Assets\Tile.png" />
+  </ItemGroup>
+
 </Project>

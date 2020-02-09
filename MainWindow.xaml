@@ -5,8 +5,45 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:YetAnotherMinesweeperClone"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
+        Title="MainWindow" SizeToContent="WidthAndHeight" ResizeMode="CanMinimize">
+	<StackPanel>
+		<Menu IsMainMenu="True">
+			<MenuItem Header="_Game">
+				<MenuItem Header="_New" />
+				<MenuItem Header="_Beginner" />
+				<MenuItem Header="_Intermediate" />
+			</MenuItem>
+		</Menu>
 
-    </Grid>
+		<Grid Margin="5">
+			<Grid.RowDefinitions>
+				<RowDefinition Height="auto"/>
+				<RowDefinition Height="5"/>
+				<RowDefinition Height="auto"/>
+			</Grid.RowDefinitions>
+
+			<Grid Grid.Row="0">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="*"/>
+					<ColumnDefinition Width="*"/>
+					<ColumnDefinition Width="*"/>
+				</Grid.ColumnDefinitions>
+
+				<TextBlock x:Name="TextOutput" Text="010" Grid.Column="0" FontSize="20"
+					   Foreground="Red" Background="Black"
+					   Margin="5" Padding="5 0"
+					   HorizontalAlignment="Center" VerticalAlignment="Center" />
+
+				<Button Content=":)" Grid.Column="1" Margin="5" Width="25" Height="25"
+				        BorderThickness="0" Click="SmileButton_Click"
+				        HorizontalAlignment="Center" VerticalAlignment="Center" />
+
+				<TextBlock Text="000" Grid.Column="2" FontSize="20"
+					   Foreground="Red" Background="Black"
+					   Margin="5" Padding="5 0"
+					   HorizontalAlignment="Center" VerticalAlignment="Center" />
+			</Grid>
+			<Grid x:Name="Minefield" Grid.Row="2" MouseLeftButtonUp="Minefield_OnMouseLeftButtonUp" />
+		</Grid>
+	</StackPanel>
 </Window>
