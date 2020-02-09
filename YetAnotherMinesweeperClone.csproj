@@ -12,7 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="Assets\FullSkin.png" />
+    <EmbeddedResource Include="Assets\FullSkin.png" />
     <Resource Include="Assets\Tile.png" />
   </ItemGroup>
 

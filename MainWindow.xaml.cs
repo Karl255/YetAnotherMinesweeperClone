@@ -45,7 +45,7 @@ namespace YetAnotherMinesweeperClone
 				{
 					Image tile = new Image()
 					{
-						Source = Textures.Tiles.Covered
+						Source = Textures.GetRandomTile()
 					};
 					tile.SetBinding(WidthProperty, scaleBinding);
 					tile.SetBinding(HeightProperty, scaleBinding);
@@ -58,8 +58,12 @@ namespace YetAnotherMinesweeperClone
 
 		private void Minefield_OnMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
 		{
-			var point = e.GetPosition(Minefield);
-			MessageBox.Show($"{ point.X % Scale.Value }, { point.Y % Scale.Value }");
+			var pos = e.GetPosition(Minefield);
+			pos.X = (int)(pos.X / Scale.Value);
+			pos.Y = (int)(pos.Y / Scale.Value);
+
+			//var element = Minefield.Children.Cast<UIElement>().First(e => Grid.GetColumn(e) == pos.X && Grid.GetRow(e) == pos.Y) as Image;
+			
 		}
 
 		private void SmileButton_Click(object sender, RoutedEventArgs e)

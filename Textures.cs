@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using System.Windows.Media.Imaging;
 
 namespace YetAnotherMinesweeperClone
@@ -66,8 +67,8 @@ namespace YetAnotherMinesweeperClone
 			Tiles.Pushed = skin.QuickClone(16, 16, 16, 16);
 			Tiles.Mine = skin.QuickClone(32, 16, 16, 16);
 			Tiles.CoveredFlag = skin.QuickClone(48, 16, 16, 16);
-			Tiles.SteppedOnMine = skin.QuickClone(64, 16, 16, 16);
-			Tiles.NoMine = skin.QuickClone(70, 16, 16, 16);
+			Tiles.NoMine = skin.QuickClone(64, 16, 16, 16);
+			Tiles.SteppedOnMine = skin.QuickClone(80, 16, 16, 16);
 			Tiles.CoveredUnknown = skin.QuickClone(96, 16, 16, 16);
 			Tiles.PushedUnknown = skin.QuickClone(112, 16, 16, 16);
 
@@ -81,11 +82,11 @@ namespace YetAnotherMinesweeperClone
 			DigitDisplay.Display = skin.QuickClone(28, 82, 41, 25);
 
 
-			SmileyButton.Normal = skin.QuickClone(0, 55, 41, 25);
-			SmileyButton.Normal = skin.QuickClone(27, 55, 41, 25);
-			SmileyButton.Normal = skin.QuickClone(54, 55, 41, 25);
-			SmileyButton.Normal = skin.QuickClone(81, 55, 41, 25);
-			SmileyButton.Normal = skin.QuickClone(108, 55, 41, 25);
+			SmileyButton.Normal = skin.QuickClone(0, 55, 26, 26);
+			SmileyButton.PushingTile = skin.QuickClone(27, 55, 26, 26);
+			SmileyButton.Lost = skin.QuickClone(54, 55, 26, 26);
+			SmileyButton.Won = skin.QuickClone(81, 55, 26, 26);
+			SmileyButton.Pushed = skin.QuickClone(108, 55, 26, 26);
 
 
 			Frame.TopLeftCorner = skin.QuickClone(0, 82, 12, 11);
@@ -105,9 +106,34 @@ namespace YetAnotherMinesweeperClone
 			Frame.MiddleBottomVerticalRight = skin.QuickClone(15, 108, 12, 1);
 		}
 
-		private static BitmapSource QuickClone(this BitmapImage bitmap, int x, int y, int width, int height)
+		public static BitmapSource GetRandomTile()
 		{
-			return new CroppedBitmap(bitmap, new Int32Rect(x, y, width, height));
+			BitmapSource[] tiles = new BitmapSource[17];
+
+			for (int i = 0; i < 9; i++)
+			{
+				tiles[i] = Tiles.Uncovered[i];
+			}
+
+			tiles[9] = Tiles.Covered;
+			tiles[10] = Tiles.CoveredFlag;
+			tiles[11] = Tiles.CoveredUnknown;
+
+			tiles[12] = Tiles.Pushed;
+			tiles[13] = Tiles.PushedUnknown;
+
+			tiles[14] = Tiles.Mine;
+			tiles[15] = Tiles.NoMine;
+			tiles[16] = Tiles.SteppedOnMine;
+
+			var random = new Random();
+			return tiles[random.Next(0, 17)];
+
+		}
+
+		private static BitmapSource QuickClone(this BitmapImage source, int x, int y, int width, int height)
+		{
+			return new CroppedBitmap(source, new Int32Rect(x, y, width, height));
 		}
 	}
 }

@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
+using System.Reflection;
 using System.Windows;
 using System.Windows.Media.Imaging;
 
@@ -16,7 +12,11 @@ namespace YetAnotherMinesweeperClone
 	{
 		protected override void OnStartup(StartupEventArgs e)
 		{
-			BitmapImage skin = new BitmapImage(new Uri("Assets/FullSkin.png", UriKind.Relative));
+			Assembly assembly = Assembly.GetExecutingAssembly();
+			BitmapImage skin = new BitmapImage();
+			skin.BeginInit();
+			skin.StreamSource = assembly.GetManifestResourceStream("YetAnotherMinesweeperClone.Assets.FullSkin.png");
+			skin.EndInit();
 			Textures.MapSkin(skin);
 		}
 	}
