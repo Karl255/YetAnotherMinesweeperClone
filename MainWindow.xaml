@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:YetAnotherMinesweeperClone"
-        mc:Ignorable="d"
+        mc:Ignorable="d" Background="#C0C0C0"
         Title="MainWindow" SizeToContent="WidthAndHeight" ResizeMode="CanMinimize">
 	<StackPanel>
 		<Menu IsMainMenu="True">
@@ -14,15 +14,22 @@
 				<MenuItem Header="_Intermediate" />
 			</MenuItem>
 		</Menu>
-
-		<Grid Margin="5">
+		
+		<Grid x:Name="RootGrid">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="auto" />
+				<ColumnDefinition Width="auto" />
+				<ColumnDefinition Width="auto" />
+			</Grid.ColumnDefinitions>
 			<Grid.RowDefinitions>
 				<RowDefinition Height="auto"/>
-				<RowDefinition Height="5"/>
+				<RowDefinition Height="auto"/>
+				<RowDefinition Height="auto"/>
+				<RowDefinition Height="auto"/>
 				<RowDefinition Height="auto"/>
 			</Grid.RowDefinitions>
-
-			<Grid Grid.Row="0">
+			
+			<Grid Grid.Column="1" Grid.Row="1">
 				<Grid.ColumnDefinitions>
 					<ColumnDefinition Width="*"/>
 					<ColumnDefinition Width="*"/>
@@ -34,7 +41,7 @@
 					   Margin="5" Padding="5 0"
 					   HorizontalAlignment="Center" VerticalAlignment="Center" />
 
-				<Button Content=":)" Grid.Column="1" Margin="5" Width="25" Height="25"
+				<Button Style="{DynamicResource SmileyButton}" Content=":)" Grid.Column="1" Margin="5" Width="25" Height="25"
 				        BorderThickness="0" Click="SmileButton_Click"
 				        HorizontalAlignment="Center" VerticalAlignment="Center" />
 
@@ -43,7 +50,7 @@
 					   Margin="5" Padding="5 0"
 					   HorizontalAlignment="Center" VerticalAlignment="Center" />
 			</Grid>
-			<Grid x:Name="Minefield" Grid.Row="2" MouseLeftButtonUp="Minefield_OnMouseLeftButtonUp" />
+			<Grid x:Name="Minefield" Grid.Column="1" Grid.Row="3" MouseLeftButtonUp="Minefield_OnMouseLeftButtonUp" />
 		</Grid>
 	</StackPanel>
 </Window>

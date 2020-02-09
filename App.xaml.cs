@@ -1,7 +1,7 @@
-﻿using System;
-using System.Reflection;
+﻿using System.Reflection;
 using System.Windows;
 using System.Windows.Media.Imaging;
+using YetAnotherMinesweeperClone.Texture;
 
 namespace YetAnotherMinesweeperClone
 {
