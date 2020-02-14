@@ -64,9 +64,14 @@ namespace YetAnotherMinesweeperClone
 				Source = Scale
 			};
 
-			tileImages = new Image[game.Columns, game.Rows];
 
 			//initialize minefield grid
+			FillMinefieldGrid();
+		}
+
+		private void FillMinefieldGrid()
+		{
+			tileImages = new Image[game.Columns, game.Rows];
 			for (int x = 0; x < game.Columns; x++)
 				Minefield.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(1, GridUnitType.Star) });
 
@@ -91,13 +96,27 @@ namespace YetAnotherMinesweeperClone
 			}
 		}
 
-		public void ResetMinefield()
+		private void ClearMinefieldGrid()
 		{
+			Minefield.Children.Clear();
+			Minefield.ColumnDefinitions.Clear();
+			Minefield.RowDefinitions.Clear();
+		}
+
+		private void ResetMinefield()
+		{
+			game.NewGame();
 			foreach (var tileImage in tileImages)
 			{
 				tileImage.Source = Textures.Tiles[(int)Tile.Covered];
 			}
-			game.NewGame();
+		}
+
+		private void ResetMinefield(int columns, int rows, int numberOfMines)
+		{
+			game.NewGame(columns, rows, numberOfMines);
+			ClearMinefieldGrid();
+			FillMinefieldGrid();
 		}
 
 		private void Minefield_OnMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
@@ -108,8 +127,10 @@ namespace YetAnotherMinesweeperClone
 			game.UncoverTile(x, y);
 		}
 
-		private void SmileButton_Click(object sender, RoutedEventArgs e) => ResetMinefield();
+		private void NewGame(object sender, RoutedEventArgs e) => ResetMinefield();
 
-		private void MenuGameNew_Click(object sender, RoutedEventArgs e) => ResetMinefield();
+		private void NewGameBeginner(object sender, RoutedEventArgs e) => ResetMinefield(9, 9, 10);
+		private void NewGameIntermediate(object sender, RoutedEventArgs e) => ResetMinefield(16, 16, 40);
+		private void NewGameExpert(object sender, RoutedEventArgs e) => ResetMinefield(30, 16, 99);
 	}
 }

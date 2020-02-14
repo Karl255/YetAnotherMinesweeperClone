@@ -9,9 +9,11 @@
 	<StackPanel>
 		<Menu IsMainMenu="True">
 			<MenuItem Header="_Game">
-				<MenuItem Header="_New" Click="MenuGameNew_Click" />
-				<MenuItem Header="_Beginner" />
-				<MenuItem Header="_Intermediate" />
+				<MenuItem Header="_New" Click="NewGame" />
+				<Separator />
+				<MenuItem Header="_Beginner" Click="NewGameBeginner" />
+				<MenuItem Header="_Intermediate" Click="NewGameIntermediate" />
+				<MenuItem Header="_Expert" Click="NewGameExpert" />
 			</MenuItem>
 		</Menu>
 		
@@ -42,7 +44,7 @@
 					   HorizontalAlignment="Center" VerticalAlignment="Center" />
 
 				<Button Style="{DynamicResource SmileyButton}" Content=":)" Grid.Column="1" Margin="5" Width="25" Height="25"
-				        BorderThickness="0" Click="SmileButton_Click"
+				        BorderThickness="0" Click="NewGame"
 				        HorizontalAlignment="Center" VerticalAlignment="Center" />
 
 				<TextBlock Text="000" Grid.Column="2" FontSize="20"

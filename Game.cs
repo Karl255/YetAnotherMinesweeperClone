@@ -36,7 +36,7 @@ namespace YetAnotherMinesweeperClone
 			Columns = columns;
 			Rows = rows;
 			NumberOfMines = numberOfMines;
-			Mines.Capacity = numberOfMines;
+			NumberOfMines = numberOfMines;
 
 			GenerateMines();
 		}

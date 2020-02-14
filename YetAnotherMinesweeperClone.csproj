@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <EmbeddedResource Include="Assets\FullSkin.png" />
+    <None Include="..\.editorconfig" Link=".editorconfig" />
     <Resource Include="Assets\Tile.png" />
   </ItemGroup>
 
