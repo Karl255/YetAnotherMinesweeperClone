@@ -49,8 +49,8 @@ namespace YetAnotherMinesweeperClone
 			for (int i = 0; i < NumberOfMines; i++)
 			{
 				var mine = (
-					x: random.Next(Columns - 1),
-					y: random.Next(Rows - 1));
+					x: random.Next(Columns),
+					y: random.Next(Rows));
 
 				Mines.Add(mine);
 			}
