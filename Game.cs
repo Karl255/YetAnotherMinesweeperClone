@@ -5,7 +5,7 @@ using YetAnotherMinesweeperClone.Texture;
 namespace YetAnotherMinesweeperClone
 {
 	public delegate void TileChangedHandler(int x, int y, Tile tile);
-	
+
 	public class Game
 	{
 		public int Columns { get; private set; }
@@ -14,6 +14,7 @@ namespace YetAnotherMinesweeperClone
 		public GameState State { get; private set; }
 
 		public List<(int x, int y)> Mines { get; private set; }
+
 		public event TileChangedHandler TileChnagedEvent;
 
 		private Random random;
@@ -22,6 +23,12 @@ namespace YetAnotherMinesweeperClone
 		{
 			random = new Random();
 			Mines = new List<(int, int)>();
+		}
+
+		public void NewGame()
+		{
+			GenerateMines();
+			State = GameState.Playing;
 		}
 
 		public void NewGame(int columns, int rows, int numberOfMines)

@@ -59,7 +59,6 @@ namespace YetAnotherMinesweeperClone
 			game.NewGame(9, 9, 10);
 			game.TileChnagedEvent += (int x, int y, Tile tile) => tileImages[x, y].Source = Textures.Tiles[(int)tile];
 
-
 			scaleBinding = new Binding("Value")
 			{
 				Source = Scale
@@ -92,6 +91,15 @@ namespace YetAnotherMinesweeperClone
 			}
 		}
 
+		public void ResetMinefield()
+		{
+			foreach (var tileImage in tileImages)
+			{
+				tileImage.Source = Textures.Tiles[(int)Tile.Covered];
+			}
+			game.NewGame();
+		}
+
 		private void Minefield_OnMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
 		{
 			var pos = e.GetPosition(Minefield);
@@ -102,13 +110,7 @@ namespace YetAnotherMinesweeperClone
 
 		private void SmileButton_Click(object sender, RoutedEventArgs e)
 		{
-			for (int x = 0; x < game.Columns; x++)
-			{
-				for (int y = 0; y < game.Rows; y++)
-				{
-					
-				}
-			}
+			ResetMinefield();
 		}
 	}
 }
