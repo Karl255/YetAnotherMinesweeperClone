@@ -1,38 +1,83 @@
 ﻿using System;
 using System.Collections.Generic;
+using YetAnotherMinesweeperClone.Texture;
 
 namespace YetAnotherMinesweeperClone
 {
-
-	class Game
+	public delegate void TileChangedHandler(int x, int y, Tile tile);
+	
+	public class Game
 	{
-		public List<(int x, int y)> Mines { get; } = new List<(int, int)>();
-		public int Columns { get; set; }
-		public int Rows { get; set; }
-		public int NumberOfMines { get; set; }
+		public int Columns { get; private set; }
+		public int Rows { get; private set; }
+		public int NumberOfMines { get; private set; }
+		public GameState State { get; private set; }
 
-		private Random random = new Random();
+		public List<(int x, int y)> Mines { get; private set; }
+		public event TileChangedHandler TileChnagedEvent;
+
+		private Random random;
+
+		public Game()
+		{
+			random = new Random();
+			Mines = new List<(int, int)>();
+		}
 
 		public void NewGame(int columns, int rows, int numberOfMines)
 		{
 			Columns = columns;
 			Rows = rows;
 			NumberOfMines = numberOfMines;
+			Mines.Capacity = numberOfMines;
+
+			GenerateMines();
 		}
 
-		public void GenerateMines()
+		private void GenerateMines()
 		{
 			Mines.Clear();
 			Mines.Capacity = NumberOfMines;
 
 			for (int i = 0; i < NumberOfMines; i++)
 			{
-				Mines.Add((
+				var mine = (
 					x: random.Next(Columns - 1),
-					y: random.Next(Rows - 1)
-				));
+					y: random.Next(Rows - 1));
+
+				Mines.Add(mine);
 			}
 		}
 
+		public void UncoverTile(int x, int y)
+		{
+			if (Mines.Contains((x, y)))
+			{
+				State = GameState.Lost;
+				TileChnagedEvent?.Invoke(x, y, Tile.SteppedOnMine);
+			}
+			else
+			{
+				TileChnagedEvent?.Invoke(x, y, (Tile)GetMineAmountAt(x, y));
+			}
+		}
+
+		private int GetMineAmountAt(int x, int y)
+		{
+			int total = 0;
+
+			for (int ix = x - 1; ix <= x + 1; ix++)
+			{
+				for (int iy = y - 1; iy <= y + 1; iy++)
+				{
+					if (Mines.Contains((ix, iy)))
+					{
+						total++;
+					}
+				}
+			}
+
+			return total;
+		}
 	}
 }

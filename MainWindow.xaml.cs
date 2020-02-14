@@ -14,9 +14,9 @@ namespace YetAnotherMinesweeperClone
 	{
 		public BindableValue<double> Scale = new BindableValue<double>(16);
 
-		private Game game = new Game();
+		private Game game;
 		private Binding scaleBinding;
-		private Image[,] gridTiles;
+		private Image[,] tileImages;
 
 		public MainWindow()
 		{
@@ -55,14 +55,19 @@ namespace YetAnotherMinesweeperClone
 				}
 			}
 
+			game = new Game();
+			game.NewGame(9, 9, 10);
+			game.TileChnagedEvent += (int x, int y, Tile tile) => tileImages[x, y].Source = Textures.Tiles[(int)tile];
+
+
 			scaleBinding = new Binding("Value")
 			{
 				Source = Scale
 			};
 
-			game.NewGame(9, 9, 10);
-			gridTiles = new Image[game.Columns, game.Rows];
+			tileImages = new Image[game.Columns, game.Rows];
 
+			//initialize minefield grid
 			for (int x = 0; x < game.Columns; x++)
 				Minefield.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(1, GridUnitType.Star) });
 
@@ -73,14 +78,16 @@ namespace YetAnotherMinesweeperClone
 				{
 					Image tile = new Image()
 					{
-						Source = Textures.GetRandomTile()
+						Source = Textures.Tiles[(int)Tile.Covered]
 					};
 					tile.SetBinding(WidthProperty, scaleBinding);
 					tile.SetBinding(HeightProperty, scaleBinding);
+
 					Grid.SetRow(tile, y);
 					Grid.SetColumn(tile, x);
+
 					Minefield.Children.Add(tile);
-					gridTiles[x, y] = tile;
+					tileImages[x, y] = tile;
 				}
 			}
 		}
@@ -90,13 +97,18 @@ namespace YetAnotherMinesweeperClone
 			var pos = e.GetPosition(Minefield);
 			(int x, int y) = ((int)(pos.X / Scale.Value), (int)(pos.Y / Scale.Value));
 
-			//var element = Minefield.Children.Cast<UIElement>().First(e => Grid.GetColumn(e) == pos.X && Grid.GetRow(e) == pos.Y) as Image;
-			gridTiles[x, y].Source = Textures.GetRandomTile();
+			game.UncoverTile(x, y);
 		}
 
 		private void SmileButton_Click(object sender, RoutedEventArgs e)
 		{
-
+			for (int x = 0; x < game.Columns; x++)
+			{
+				for (int y = 0; y < game.Rows; y++)
+				{
+					
+				}
+			}
 		}
 	}
 }
