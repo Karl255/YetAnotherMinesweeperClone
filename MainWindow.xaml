@@ -9,7 +9,7 @@
 	<StackPanel>
 		<Menu IsMainMenu="True">
 			<MenuItem Header="_Game">
-				<MenuItem Header="_New" />
+				<MenuItem Header="_New" Click="MenuGameNew_Click" />
 				<MenuItem Header="_Beginner" />
 				<MenuItem Header="_Intermediate" />
 			</MenuItem>

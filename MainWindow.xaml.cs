@@ -108,9 +108,8 @@ namespace YetAnotherMinesweeperClone
 			game.UncoverTile(x, y);
 		}
 
-		private void SmileButton_Click(object sender, RoutedEventArgs e)
-		{
-			ResetMinefield();
-		}
+		private void SmileButton_Click(object sender, RoutedEventArgs e) => ResetMinefield();
+
+		private void MenuGameNew_Click(object sender, RoutedEventArgs e) => ResetMinefield();
 	}
 }
