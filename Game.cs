@@ -18,10 +18,11 @@ namespace YetAnotherMinesweeperClone
 		public event TileChangedHandler TileChnagedEvent;
 
 		private Random random;
+		private bool[,] uncoveredTiles;
 
 		public Game()
 		{
-			random = new Random();
+			random = new Random(-9);
 			Mines = new List<(int, int)>();
 		}
 
@@ -29,6 +30,7 @@ namespace YetAnotherMinesweeperClone
 		{
 			GenerateMines();
 			State = GameState.Playing;
+			uncoveredTiles = new bool[Columns, Rows];
 		}
 
 		public void NewGame(int columns, int rows, int numberOfMines)
@@ -37,6 +39,7 @@ namespace YetAnotherMinesweeperClone
 			Rows = rows;
 			NumberOfMines = numberOfMines;
 			NumberOfMines = numberOfMines;
+			uncoveredTiles = new bool[columns, rows];
 
 			GenerateMines();
 		}
@@ -58,6 +61,9 @@ namespace YetAnotherMinesweeperClone
 
 		public void UncoverTile(int x, int y)
 		{
+			if (uncoveredTiles[x, y]) return;
+			
+
 			if (Mines.Contains((x, y)))
 			{
 				State = GameState.Lost;
@@ -65,7 +71,42 @@ namespace YetAnotherMinesweeperClone
 			}
 			else
 			{
-				TileChnagedEvent?.Invoke(x, y, (Tile)GetMineAmountAt(x, y));
+				FloodUncoverTile(x, y);
+				//int n = GetMineAmountAt(x, y);
+				//TileChnagedEvent?.Invoke(x, y, (Tile)n);
+
+				//if (n == 0)
+				//{
+				//	FloodUncoverAround(x, y);
+				//}
+			}
+		}
+
+		private void FloodUncoverAround(int x, int y)
+		{
+			for (int ix = x - 1; ix <= x + 1; ix++)
+			{
+				for (int iy = y - 1; iy <= y + 1; iy++)
+				{
+					if (IsOutOfBounds(ix, iy)) continue;
+					FloodUncoverTile(ix, iy);
+				}
+			}
+		}
+
+		private void FloodUncoverTile(int x, int y)
+		{
+			if (!uncoveredTiles[x, y])
+			{
+				uncoveredTiles[x, y] = true;
+
+				int n = GetMineAmountAt(x, y);
+				TileChnagedEvent?.Invoke(x, y, (Tile)n);
+
+				if (n == 0)
+				{
+					FloodUncoverAround(x, y);
+				}
 			}
 		}
 
@@ -86,5 +127,7 @@ namespace YetAnotherMinesweeperClone
 
 			return total;
 		}
+
+		private bool IsOutOfBounds(int x, int y) => !(0 <= x && x < Columns && 0 <= y && y < Rows);
 	}
 }
