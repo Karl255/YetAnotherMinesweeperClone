@@ -72,13 +72,6 @@ namespace YetAnotherMinesweeperClone
 			else
 			{
 				FloodUncoverTile(x, y);
-				//int n = GetMineAmountAt(x, y);
-				//TileChnagedEvent?.Invoke(x, y, (Tile)n);
-
-				//if (n == 0)
-				//{
-				//	FloodUncoverAround(x, y);
-				//}
 			}
 		}
 
