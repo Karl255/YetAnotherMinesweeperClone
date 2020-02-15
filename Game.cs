@@ -15,7 +15,7 @@ namespace YetAnotherMinesweeperClone
 
 		public List<(int x, int y)> Mines { get; private set; }
 
-		public event TileChangedHandler TileChnagedEvent;
+		public event TileChangedHandler TileChangedEvent;
 
 		private Random random;
 		private bool[,] uncoveredTiles;
@@ -62,12 +62,12 @@ namespace YetAnotherMinesweeperClone
 		public void UncoverTile(int x, int y)
 		{
 			if (uncoveredTiles[x, y]) return;
-			
+
 
 			if (Mines.Contains((x, y)))
 			{
 				State = GameState.Lost;
-				TileChnagedEvent?.Invoke(x, y, Tile.SteppedOnMine);
+				TileChangedEvent?.Invoke(x, y, Tile.SteppedOnMine);
 			}
 			else
 			{
@@ -94,7 +94,7 @@ namespace YetAnotherMinesweeperClone
 				uncoveredTiles[x, y] = true;
 
 				int n = GetMineAmountAt(x, y);
-				TileChnagedEvent?.Invoke(x, y, (Tile)n);
+				TileChangedEvent?.Invoke(x, y, (Tile)n);
 
 				if (n == 0)
 				{

@@ -57,7 +57,7 @@ namespace YetAnotherMinesweeperClone
 
 			game = new Game();
 			game.NewGame(9, 9, 10);
-			game.TileChnagedEvent += (int x, int y, Tile tile) => tileImages[x, y].Source = Textures.Tiles[(int)tile];
+			game.TileChangedEvent += (int x, int y, Tile tile) => tileImages[x, y].Source = Textures.Tiles[(int)tile];
 
 			scaleBinding = new Binding("Value")
 			{
