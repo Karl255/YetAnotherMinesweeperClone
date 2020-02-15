@@ -22,7 +22,7 @@ namespace YetAnotherMinesweeperClone
 
 		public Game()
 		{
-			random = new Random(-9);
+			random = new Random();
 			Mines = new List<(int, int)>();
 		}
 
