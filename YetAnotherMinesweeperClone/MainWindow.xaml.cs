@@ -132,5 +132,26 @@ namespace YetAnotherMinesweeperClone
 		private void NewGameBeginner(object sender, RoutedEventArgs e) => ResetMinefield(9, 9, 10);
 		private void NewGameIntermediate(object sender, RoutedEventArgs e) => ResetMinefield(16, 16, 40);
 		private void NewGameExpert(object sender, RoutedEventArgs e) => ResetMinefield(30, 16, 99);
+
+		private void NewGameCustom(object sender, RoutedEventArgs e)
+		{
+			CustomMinefieldDialog cmfd = new CustomMinefieldDialog()
+			{
+				Owner = this
+			};
+
+			cmfd.Columns = game.Columns;
+			cmfd.Rows = game.Rows;
+			cmfd.Mines = game.NumberOfMines;
+
+			cmfd.ShowDialog();
+
+			if (cmfd.DialogResult != true)
+			{
+				return;
+			}
+
+			ResetMinefield(cmfd.Columns, cmfd.Rows, cmfd.Mines);
+		}
 	}
 }

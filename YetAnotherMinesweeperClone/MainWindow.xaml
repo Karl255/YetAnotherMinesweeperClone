@@ -14,6 +14,8 @@
 				<MenuItem Header="_Beginner" Click="NewGameBeginner" />
 				<MenuItem Header="_Intermediate" Click="NewGameIntermediate" />
 				<MenuItem Header="_Expert" Click="NewGameExpert" />
+				<Separator />
+				<MenuItem Header="_Custom" Click="NewGameCustom" />
 			</MenuItem>
 		</Menu>
 		
