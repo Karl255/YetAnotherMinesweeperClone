@@ -135,14 +135,13 @@ namespace YetAnotherMinesweeperClone
 
 		private void NewGameCustom(object sender, RoutedEventArgs e)
 		{
-			CustomMinefieldDialog cmfd = new CustomMinefieldDialog()
+			var cmfd = new CustomMinefieldDialog
 			{
-				Owner = this
+				Owner = this,
+				Columns = game.Columns,
+				Rows = game.Rows,
+				Mines = game.NumberOfMines
 			};
-
-			cmfd.Columns = game.Columns;
-			cmfd.Rows = game.Rows;
-			cmfd.Mines = game.NumberOfMines;
 
 			cmfd.ShowDialog();
 
@@ -152,6 +151,24 @@ namespace YetAnotherMinesweeperClone
 			}
 
 			ResetMinefield(cmfd.Columns, cmfd.Rows, cmfd.Mines);
+		}
+
+		private void SetScale(object sender, RoutedEventArgs e)
+		{
+			var ssd = new SetScaleDialog
+			{
+				Owner = this,
+				Scale = Scale.Value
+			};
+
+			ssd.ShowDialog();
+
+			if (ssd.DialogResult != true)
+			{
+				return;
+			}
+
+			Scale.Value = ssd.Scale;
 		}
 	}
 }
