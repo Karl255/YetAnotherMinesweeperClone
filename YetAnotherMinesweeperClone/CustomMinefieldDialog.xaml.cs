@@ -13,6 +13,10 @@ namespace YetAnotherMinesweeperClone
 		public CustomMinefieldDialog()
 		{
 			InitializeComponent();
+
+			WidthInput.Text = Columns.ToString();
+			HeightInput.Text = Rows.ToString();
+			MinesInput.Text = Mines.ToString();
 		}
 
 		private void OK_Click(object sender, RoutedEventArgs e)
@@ -28,7 +32,7 @@ namespace YetAnotherMinesweeperClone
 				DialogResult = true;
 			}
 		}
-		
+
 		private bool ValidateText(string text, int min, int max, string field)
 		{
 			int result;
@@ -47,6 +51,6 @@ namespace YetAnotherMinesweeperClone
 
 			return true;
 		}
-		
+
 	}
 }
