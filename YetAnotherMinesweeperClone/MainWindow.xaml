@@ -15,9 +15,9 @@
 				<MenuItem Header="_Intermediate" Click="NewGameIntermediate" />
 				<MenuItem Header="_Expert" Click="NewGameExpert" />
 				<Separator />
-				<MenuItem Header="_Custom" Click="NewGameCustom" />
+				<MenuItem Header="_Custom..." Click="NewGameCustom" />
 				<Separator />
-				<MenuItem Header="_Set Scale" Click="SetScale" />
+				<MenuItem Header="_Set Scale..." Click="SetScale" />
 			</MenuItem>
 		</Menu>
 		
