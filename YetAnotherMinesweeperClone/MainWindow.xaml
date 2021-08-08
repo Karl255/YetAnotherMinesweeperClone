@@ -45,7 +45,7 @@
 				<TextBlock x:Name="TextOutput" Text="010" Grid.Column="0" FontSize="20"
 					   Foreground="Red" Background="Black"
 					   Margin="5" Padding="5 0"
-					   HorizontalAlignment="Center" VerticalAlignment="Center" />
+					   HorizontalAlignment="Left" VerticalAlignment="Center" />
 
 				<Button Style="{DynamicResource SmileyButton}" Content=":)" Grid.Column="1" Margin="5" Width="25" Height="25"
 				        BorderThickness="0" Click="NewGame"
@@ -54,7 +54,7 @@
 				<TextBlock Text="000" Grid.Column="2" FontSize="20"
 					   Foreground="Red" Background="Black"
 					   Margin="5" Padding="5 0"
-					   HorizontalAlignment="Center" VerticalAlignment="Center" />
+					   HorizontalAlignment="Right" VerticalAlignment="Center" />
 			</Grid>
 			<Grid x:Name="Minefield" Grid.Column="1" Grid.Row="3" MouseLeftButtonUp="Minefield_OnMouseLeftButtonUp" />
 		</Grid>

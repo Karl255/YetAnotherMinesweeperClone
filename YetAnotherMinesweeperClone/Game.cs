@@ -10,7 +10,7 @@ namespace YetAnotherMinesweeperClone
 	{
 		public int Columns { get; private set; }
 		public int Rows { get; private set; }
-		public int NumberOfMines { get; private set; }
+		public int MineCount { get; private set; }
 		public GameState State { get; private set; }
 
 		public List<(int x, int y)> Mines { get; private set; }
@@ -37,8 +37,8 @@ namespace YetAnotherMinesweeperClone
 		{
 			Columns = columns;
 			Rows = rows;
-			NumberOfMines = numberOfMines;
-			NumberOfMines = numberOfMines;
+			MineCount = numberOfMines;
+			MineCount = numberOfMines;
 			uncoveredTiles = new bool[columns, rows];
 
 			GenerateMines();
@@ -47,9 +47,9 @@ namespace YetAnotherMinesweeperClone
 		private void GenerateMines()
 		{
 			Mines.Clear();
-			Mines.Capacity = NumberOfMines;
+			Mines.Capacity = MineCount;
 
-			for (int i = 0; i < NumberOfMines; i++)
+			for (int i = 0; i < MineCount; i++)
 			{
 				var mine = (
 					x: random.Next(Columns),

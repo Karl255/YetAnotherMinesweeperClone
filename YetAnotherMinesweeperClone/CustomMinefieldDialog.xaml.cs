@@ -1,22 +1,20 @@
 ﻿using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Input;
 
 namespace YetAnotherMinesweeperClone
 {
 	public partial class CustomMinefieldDialog : Window
 	{
-		public int Columns { get; set; }
-		public int Rows { get; set; }
-		public int Mines { get; set; }
+		public int Columns { get; private set; }
+		public int Rows { get; private set; }
+		public int MineCount { get; private set; }
 
-		public CustomMinefieldDialog()
+		public CustomMinefieldDialog(int columns, int rows, int mineCount)
 		{
 			InitializeComponent();
 
-			WidthInput.Text = Columns.ToString();
-			HeightInput.Text = Rows.ToString();
-			MinesInput.Text = Mines.ToString();
+			WidthInput.Text = columns.ToString();
+			HeightInput.Text = rows.ToString();
+			MinesInput.Text = mineCount.ToString();
 		}
 
 		private void OK_Click(object sender, RoutedEventArgs e)
@@ -27,7 +25,7 @@ namespace YetAnotherMinesweeperClone
 			{
 				Columns = int.Parse(WidthInput.Text);
 				Rows = int.Parse(HeightInput.Text);
-				Mines = int.Parse(MinesInput.Text);
+				MineCount = int.Parse(MinesInput.Text);
 
 				DialogResult = true;
 			}

@@ -4,13 +4,13 @@ namespace YetAnotherMinesweeperClone
 {
 	public partial class SetScaleDialog : Window
 	{
-		public double Scale;
+		public double Scale { get; private set; }
 
-		public SetScaleDialog()
+		public SetScaleDialog(double scale)
 		{
 			InitializeComponent();
 
-			ScaleInput.Text = Scale.ToString();
+			ScaleInput.Text = scale.ToString();
 		}
 
 		private void OK_Click(object sender, RoutedEventArgs e)
