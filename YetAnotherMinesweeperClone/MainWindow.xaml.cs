@@ -107,6 +107,7 @@ namespace YetAnotherMinesweeperClone
 			Game.TileChangedEvent += (x, y, tile) => TileImages[x, y].Source = tile;
 			ClearMinefieldGrid();
 			FillMinefieldGrid();
+			SmileyButton.Content = ":)";
 		}
 
 		private (int x, int y) GetGridPosition(Point point) => ((int)(point.X / Scale.Value), (int)(point.Y / Scale.Value));
@@ -114,22 +115,25 @@ namespace YetAnotherMinesweeperClone
 		// handles the "pushed down" state of covered tiles before they are actually uncovered
 		private void Minefield_OnMouseMove(object sender, MouseEventArgs e)
 		{
-			var position = GetGridPosition(e.GetPosition(Minefield));
-
-			// didn't move, do nothing
-			if (position == PreviousPosition)
+			if (Game.State != GameState.Playing)
 				return;
 
 			// nothing to do if left click is released, everything is handled by the left button up handler
 			if (e.LeftButton == MouseButtonState.Released)
 				return;
 
+			var position = GetGridPosition(e.GetPosition(Minefield));
+
+			// didn't move, do nothing
+			if (position == PreviousPosition)
+				return;
+
 			if (PreviousPosition != (-1, -1)
-				&& !Game.IsTileUncovered(PreviousPosition))
+				&& Game.GetTileState(PreviousPosition) == TileState.Covered)
 				// "unpushes" the previously pushed tile
 				TileImages[PreviousPosition.x, PreviousPosition.y].Source = Textures.Tiles[(int)TileTexture.Covered];
 
-			if (!Game.IsTileUncovered(position))
+			if (Game.GetTileState(position) == TileState.Covered)
 				// pushes the tile at the mouse position
 				TileImages[position.x, position.y].Source = Textures.Tiles[(int)TileTexture.CoveredPushed];
 
@@ -139,16 +143,46 @@ namespace YetAnotherMinesweeperClone
 		// in case the mouse leaves the grid while left click is pressed
 		private void Minefield_OnMouseLeave(object sender, MouseEventArgs e)
 		{
+			if (Game.State != GameState.Playing)
+				return;
+
 			// "unpush" pushed covered tile
 			if (PreviousPosition != (-1, -1)
-				&& !Game.IsTileUncovered(PreviousPosition))
+				&& Game.GetTileState(PreviousPosition) == TileState.Covered)
 				TileImages[PreviousPosition.x, PreviousPosition.y].Source = Textures.Tiles[(int)TileTexture.Covered];
+		}
+
+		private void Minefield_OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+		{
+			if (Game.State != GameState.Playing)
+				return;
+
+			SmileyButton.Content = ":O";
 		}
 
 		private void Minefield_OnMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
 		{
+			if (Game.State != GameState.Playing)
+				return;
+
 			(int x, int y) = GetGridPosition(e.GetPosition(Minefield));
 			Game.UncoverTile(x, y);
+
+			if (Game.State == GameState.Won)
+				SmileyButton.Content = "B)";
+			else if (Game.State == GameState.Lost)
+				SmileyButton.Content = "x|";
+			else
+				SmileyButton.Content = ":)";
+		}
+
+		private void Minefield_OnMouseRightButtonUp(object sender, MouseButtonEventArgs e)
+		{
+			if (Game.State != GameState.Playing)
+				return;
+
+			(int x, int y) = GetGridPosition(e.GetPosition(Minefield));
+			Game.CycleTileState(x, y);
 		}
 
 		private void NewGame(object sender, RoutedEventArgs e) => ResetMinefield(Game.Columns, Game.Rows, Game.MineCount);

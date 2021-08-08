@@ -17,7 +17,7 @@ namespace YetAnotherMinesweeperClone
 		public event TileChangedHandler TileChangedEvent;
 
 		private Tile[,] Field { get; init; }
-		private bool[,] UncoveredTiles { get; init; }
+		private TileState[,] TileStates { get; init; }
 
 		public Game(int columns, int rows, int mineCount)
 		{
@@ -27,7 +27,7 @@ namespace YetAnotherMinesweeperClone
 
 			var mines = GenerateMines(mineCount);
 			Field = new Tile[columns, rows];
-			UncoveredTiles = new bool[columns, rows];
+			TileStates = new TileState[columns, rows];
 
 			foreach (var mine in mines)
 				Field[mine.x, mine.y] = Tile.Bomb;
@@ -70,10 +70,10 @@ namespace YetAnotherMinesweeperClone
 
 		public void UncoverTile(int x, int y)
 		{
-			if (UncoveredTiles[x, y])
+			if (TileStates[x, y] != TileState.Covered)
 				return;
 
-			UncoveredTiles[x, y] = true;
+			TileStates[x, y] = TileState.Uncovered;
 			Tile tile = Field[x, y];
 
 			if (tile == Tile.Bomb) // bomb
@@ -90,8 +90,11 @@ namespace YetAnotherMinesweeperClone
 			{
 				TileChangedEvent?.Invoke(x, y, Textures.Tiles[(int)tile]);
 			}
+
+			if (IsGameWon())
+				State = GameState.Won;
 		}
-		
+
 		private void UncoverAround(int x, int y)
 		{
 			int xStart = Math.Max(0, x - 1);
@@ -103,10 +106,10 @@ namespace YetAnotherMinesweeperClone
 			{
 				for (int ix = xStart; ix < xEnd; ix++)
 				{
-					if (ix == x && iy == y || UncoveredTiles[ix, iy])
+					if (ix == x && iy == y || TileStates[ix, iy] != TileState.Covered)
 						continue;
 
-					UncoveredTiles[ix, iy] = true;
+					TileStates[ix, iy] = TileState.Uncovered;
 					Tile tile = Field[ix, iy];
 
 					if (tile == Tile.Blank) // 0
@@ -122,6 +125,41 @@ namespace YetAnotherMinesweeperClone
 			}
 		}
 
-		public bool IsTileUncovered((int x, int y) position) => UncoveredTiles[position.x, position.y];
+		public TileState GetTileState((int x, int y) position) => TileStates[position.x, position.y];
+
+		// "right clicking" a tile
+		public void CycleTileState(int x, int y)
+		{
+			TileState initialState = TileStates[x, y];
+
+			if (initialState != TileState.Uncovered)
+			{
+				switch (initialState)
+				{
+					case TileState.Covered:
+						TileStates[x, y] = TileState.Flagged;
+						TileChangedEvent?.Invoke(x, y, Textures.Tiles[(int)TileTexture.Flag]);
+						break;
+
+					case TileState.Flagged:
+						TileStates[x, y] = TileState.Covered;
+						TileChangedEvent?.Invoke(x, y, Textures.Tiles[(int)TileTexture.Covered]);
+						break;
+
+					default:
+						break;
+				}
+			}
+		}
+
+		private bool IsGameWon()
+		{
+			for (int y = 0; y < Rows; y++)
+				for (int x = 0; x < Columns; x++)
+					if (Field[x, y] != Tile.Bomb && TileStates[x, y] != TileState.Uncovered)
+						return false;
+
+			return true;
+		}
 	}
 }

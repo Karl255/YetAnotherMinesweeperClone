@@ -47,7 +47,8 @@
 					   Margin="4" Padding="5 0" Height="26"
 					   HorizontalAlignment="Left" VerticalAlignment="Center" />
 
-				<Button Style="{DynamicResource SmileyButton}" Content=":)" Grid.Column="1"
+				<Button x:Name="SmileyButton" Style="{DynamicResource SmileyButton}"
+						Content=":)" Grid.Column="1"
 						Margin="4" Width="26" Height="26"
 				        BorderThickness="0" Click="NewGame"
 				        HorizontalAlignment="Center" VerticalAlignment="Center" />
@@ -59,8 +60,10 @@
 			</Grid>
 			<Grid x:Name="Minefield" Grid.Column="1" Grid.Row="3" HorizontalAlignment="Center"
 				  MouseMove="Minefield_OnMouseMove"
+				  MouseLeftButtonDown="Minefield_OnMouseLeftButtonDown"
 				  MouseLeftButtonUp="Minefield_OnMouseLeftButtonUp"
-				  MouseLeave="Minefield_OnMouseLeave"/>
+				  MouseLeave="Minefield_OnMouseLeave"
+				  MouseRightButtonUp="Minefield_OnMouseRightButtonUp" />
 		</Grid>
 	</StackPanel>
 </Window>
