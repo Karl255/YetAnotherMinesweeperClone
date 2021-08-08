@@ -17,7 +17,7 @@ namespace YetAnotherMinesweeperClone
 
 		public event TileChangedHandler TileChangedEvent;
 
-		private Random random;
+		private Random random { get; init; }
 		private bool[,] uncoveredTiles;
 
 		public Game()

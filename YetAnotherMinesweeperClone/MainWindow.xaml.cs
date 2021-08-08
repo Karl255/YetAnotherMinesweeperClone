@@ -12,10 +12,10 @@ namespace YetAnotherMinesweeperClone
 	/// </summary>
 	public partial class MainWindow : Window
 	{
-		public BindableValue<double> Scale = new BindableValue<double>(16);
+		public BindableValue<double> Scale = new(16);
 
-		private Game game;
-		private Binding scaleBinding;
+		private Game game { get; init; }
+		private Binding scaleBinding { get; init; }
 		private Image[,] tileImages;
 
 		public MainWindow()
@@ -27,7 +27,7 @@ namespace YetAnotherMinesweeperClone
 			{
 				for (int j = 0; j < 2; j++)
 				{
-					Image img = new Image { Source = Textures.FrameVertecies[2 * i + j] };
+					Image img = new () { Source = Textures.FrameVertecies[2 * i + j] };
 					Grid.SetColumn(img, 2 * j);
 					Grid.SetRow(img, 2 * i);
 					RootGrid.Children.Add(img);
@@ -37,7 +37,7 @@ namespace YetAnotherMinesweeperClone
 			//frame horizontal bars
 			for (int i = 0; i < 3; i++)
 			{
-				Image img = new Image { Source = Textures.FrameHorizontalBars[i], Stretch = Stretch.Fill };
+				Image img = new () { Source = Textures.FrameHorizontalBars[i], Stretch = Stretch.Fill };
 				Grid.SetColumn(img, 1);
 				Grid.SetRow(img, 2 * i);
 				RootGrid.Children.Add(img);
@@ -48,7 +48,7 @@ namespace YetAnotherMinesweeperClone
 			{
 				for (int j = 0; j < 2; j++)
 				{
-					Image img = new Image { Source = Textures.FrameVerticalBars[2 * i + j], Stretch = Stretch.Fill };
+					Image img = new () { Source = Textures.FrameVerticalBars[2 * i + j], Stretch = Stretch.Fill };
 					Grid.SetColumn(img, 2 * j);
 					Grid.SetRow(img, 2 * i + 1);
 					RootGrid.Children.Add(img);
@@ -80,7 +80,7 @@ namespace YetAnotherMinesweeperClone
 				Minefield.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(1, GridUnitType.Star) });
 				for (int x = 0; x < game.Columns; x++)
 				{
-					Image tile = new Image()
+					Image tile = new()
 					{
 						Source = Textures.Tiles[(int)Tile.Covered]
 					};

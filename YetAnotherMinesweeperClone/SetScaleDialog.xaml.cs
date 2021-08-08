@@ -23,11 +23,9 @@ namespace YetAnotherMinesweeperClone
 			}
 		}
 
-		private bool ValidateText(string text, int min, int max, string field)
+		private static bool ValidateText(string text, int min, int max, string field)
 		{
-			int result;
-
-			if (!int.TryParse(text, out result))
+			if (!int.TryParse(text, out int result))
 			{
 				MessageBox.Show("Input is not a number: " + field);
 				return false;

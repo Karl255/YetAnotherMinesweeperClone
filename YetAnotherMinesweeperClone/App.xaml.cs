@@ -13,7 +13,7 @@ namespace YetAnotherMinesweeperClone
 		protected override void OnStartup(StartupEventArgs e)
 		{
 			Assembly assembly = Assembly.GetExecutingAssembly();
-			BitmapImage skin = new BitmapImage();
+			BitmapImage skin = new();
 			skin.BeginInit();
 			skin.StreamSource = assembly.GetManifestResourceStream("YetAnotherMinesweeperClone.Assets.FullSkin.png");
 			skin.EndInit();
