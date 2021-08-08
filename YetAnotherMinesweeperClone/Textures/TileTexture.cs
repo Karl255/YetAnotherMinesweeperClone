@@ -15,7 +15,7 @@
 		CoveredPushed,
 		Mine,
 		Flag,
-		NoMine,
+		IncorrectFlag,
 		SteppedOnMine,
 		CoveredUnknown,
 		CoveredUnknownPushed

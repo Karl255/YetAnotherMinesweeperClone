@@ -80,6 +80,7 @@ namespace YetAnotherMinesweeperClone
 			{
 				State = GameState.Lost;
 				TileChangedEvent?.Invoke(x, y, Textures.Tiles[(int)TileTexture.SteppedOnMine]);
+				ExposeAllMines(x, y);
 			}
 			else if (tile == Tile.Blank) // 0
 			{
@@ -92,7 +93,10 @@ namespace YetAnotherMinesweeperClone
 			}
 
 			if (IsGameWon())
+			{
 				State = GameState.Won;
+				FlagAllMines();
+			}
 		}
 
 		private void UncoverAround(int x, int y)
@@ -160,6 +164,38 @@ namespace YetAnotherMinesweeperClone
 						return false;
 
 			return true;
+		}
+
+		private void ExposeAllMines(int x, int y)
+		{
+			for (int iy = 0; iy < Rows; iy++)
+			{
+				for (int ix = 0; ix < Columns; ix++)
+				{
+					if (ix == x && iy == y)
+						continue;
+
+					// flagged, but not a bomb
+					if (Field[ix, iy] != Tile.Bomb && TileStates[ix, iy] == TileState.Flagged)
+						TileChangedEvent?.Invoke(ix, iy, Textures.Tiles[(int)TileTexture.IncorrectFlag]);
+					// a bomb, but not flagged
+					else if (Field[ix, iy] == Tile.Bomb && TileStates[ix, iy] != TileState.Flagged)
+						TileChangedEvent?.Invoke(ix, iy, Textures.Tiles[(int)TileTexture.Mine]);
+				}
+			}
+		}
+
+		private void FlagAllMines()
+		{
+			for (int iy = 0; iy < Rows; iy++)
+			{
+				for (int ix = 0; ix < Columns; ix++)
+				{
+					// a bomb, but not flagged
+					if (Field[ix, iy] == Tile.Bomb && TileStates[ix, iy] != TileState.Flagged)
+						TileChangedEvent?.Invoke(ix, iy, Textures.Tiles[(int)TileTexture.Flag]);
+				}
+			}
 		}
 	}
 }
