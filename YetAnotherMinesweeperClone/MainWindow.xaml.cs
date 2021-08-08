@@ -1,8 +1,10 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Threading;
 using YetAnotherMinesweeperClone.Texture;
 
 namespace YetAnotherMinesweeperClone
@@ -12,12 +14,24 @@ namespace YetAnotherMinesweeperClone
 	/// </summary>
 	public partial class MainWindow : Window
 	{
-		public BindableValue<double> Scale = new(16);
+		private BindableValue<double> Scale = new(16);
 
 		private Game Game;
 		private (int x, int y) PreviousPosition = (-1, -1);
 		private Binding ScaleBinding { get; init; }
 		private Image[,] TileImages;
+		private DispatcherTimer Timer { get; init; }
+
+		private int _timePassed = 0;
+		public int TimePassed
+		{
+			get => _timePassed;
+			set
+			{
+				_timePassed = value;
+				TimeCounter.Text = TimePassed.ToString("000");
+			}
+		}
 
 		public MainWindow()
 		{
@@ -56,12 +70,13 @@ namespace YetAnotherMinesweeperClone
 				}
 			}
 
+			Timer = new(TimeSpan.FromSeconds(1), DispatcherPriority.Send, (_, _) => TimePassed++, Dispatcher);
 			ScaleBinding = new Binding("Value")
 			{
 				Source = Scale
 			};
 
-			ResetMinefield(9, 9, 10);
+			ResetGame(9, 9, 10);
 		}
 
 		private void FillMinefieldGrid()
@@ -101,13 +116,18 @@ namespace YetAnotherMinesweeperClone
 			Minefield.RowDefinitions.Clear();
 		}
 
-		private void ResetMinefield(int columns, int rows, int mineCount)
+		private void ResetGame(int columns, int rows, int mineCount)
 		{
+			Timer.Stop();
+			TimePassed = 0;
+
 			Game = new(columns, rows, mineCount);
 			Game.TileChangedEvent += (x, y, tile) => TileImages[x, y].Source = tile;
+
 			ClearMinefieldGrid();
 			FillMinefieldGrid();
 			SmileyButton.Content = ":)";
+			MineCounter.Text = Game.MinesLeft.ToString("000");
 		}
 
 		private (int x, int y) GetGridPosition(Point point) => ((int)(point.X / Scale.Value), (int)(point.Y / Scale.Value));
@@ -165,13 +185,20 @@ namespace YetAnotherMinesweeperClone
 			if (Game.State != GameState.Playing)
 				return;
 
+			Timer.Start();
 			(int x, int y) = GetGridPosition(e.GetPosition(Minefield));
 			Game.UncoverTile(x, y);
 
 			if (Game.State == GameState.Won)
+			{
+				Timer.Stop();
 				SmileyButton.Content = "B)";
+			}
 			else if (Game.State == GameState.Lost)
+			{
+				Timer.Stop();
 				SmileyButton.Content = "x|";
+			}
 			else
 				SmileyButton.Content = ":)";
 		}
@@ -181,14 +208,19 @@ namespace YetAnotherMinesweeperClone
 			if (Game.State != GameState.Playing)
 				return;
 
+			Timer.Start();
 			(int x, int y) = GetGridPosition(e.GetPosition(Minefield));
 			Game.CycleTileState(x, y);
+
+			MineCounter.Text = Game.MinesLeft >= 0
+				? Game.MinesLeft.ToString("000")
+				: Game.MinesLeft.ToString("00");
 		}
 
-		private void NewGame(object sender, RoutedEventArgs e) => ResetMinefield(Game.Columns, Game.Rows, Game.MineCount);
-		private void NewGameBeginner(object sender, RoutedEventArgs e) => ResetMinefield(9, 9, 10);
-		private void NewGameIntermediate(object sender, RoutedEventArgs e) => ResetMinefield(16, 16, 40);
-		private void NewGameExpert(object sender, RoutedEventArgs e) => ResetMinefield(30, 16, 99);
+		private void NewGame(object sender, RoutedEventArgs e) => ResetGame(Game.Columns, Game.Rows, Game.MineCount);
+		private void NewGameBeginner(object sender, RoutedEventArgs e) => ResetGame(9, 9, 10);
+		private void NewGameIntermediate(object sender, RoutedEventArgs e) => ResetGame(16, 16, 40);
+		private void NewGameExpert(object sender, RoutedEventArgs e) => ResetGame(30, 16, 99);
 
 		private void NewGameCustom(object sender, RoutedEventArgs e)
 		{
@@ -201,7 +233,7 @@ namespace YetAnotherMinesweeperClone
 
 			// mmm, nullable bools
 			if (dialog.DialogResult is true)
-				ResetMinefield(dialog.Columns, dialog.Rows, dialog.MineCount);
+				ResetGame(dialog.Columns, dialog.Rows, dialog.MineCount);
 		}
 
 		private void SetScale(object sender, RoutedEventArgs e)

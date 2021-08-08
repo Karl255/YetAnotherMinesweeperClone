@@ -11,6 +11,7 @@ namespace YetAnotherMinesweeperClone
 		public int Columns { get; private set; }
 		public int Rows { get; private set; }
 		public int MineCount { get; private set; }
+		public int MinesLeft { get; private set; }
 		public GameState State { get; private set; }
 
 		public delegate void TileChangedHandler(int x, int y, BitmapSource tile);
@@ -24,6 +25,7 @@ namespace YetAnotherMinesweeperClone
 			Columns = columns;
 			Rows = rows;
 			MineCount = mineCount;
+			MinesLeft = mineCount;
 
 			var mines = GenerateMines(mineCount);
 			Field = new Tile[columns, rows];
@@ -141,11 +143,13 @@ namespace YetAnotherMinesweeperClone
 				switch (initialState)
 				{
 					case TileState.Covered:
+						MinesLeft--;
 						TileStates[x, y] = TileState.Flagged;
 						TileChangedEvent?.Invoke(x, y, Textures.Tiles[(int)TileTexture.Flag]);
 						break;
 
 					case TileState.Flagged:
+						MinesLeft++;
 						TileStates[x, y] = TileState.Covered;
 						TileChangedEvent?.Invoke(x, y, Textures.Tiles[(int)TileTexture.Covered]);
 						break;
