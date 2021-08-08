@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Windows.Media.Imaging;
 using YetAnotherMinesweeperClone.Texture;
 
 namespace YetAnotherMinesweeperClone
 {
-	public delegate void TileChangedHandler(int x, int y, Tile tile);
 
 	public class Game
 	{
@@ -13,114 +13,115 @@ namespace YetAnotherMinesweeperClone
 		public int MineCount { get; private set; }
 		public GameState State { get; private set; }
 
-		public List<(int x, int y)> Mines { get; private set; }
-
+		public delegate void TileChangedHandler(int x, int y, BitmapSource tile);
 		public event TileChangedHandler TileChangedEvent;
 
-		private Random random { get; init; }
-		private bool[,] uncoveredTiles;
+		private Tile[,] Field { get; init; }
+		private bool[,] UncoveredTiles { get; init; }
 
-		public Game()
-		{
-			random = new Random();
-			Mines = new List<(int, int)>();
-		}
-
-		public void NewGame()
-		{
-			GenerateMines();
-			State = GameState.Playing;
-			uncoveredTiles = new bool[Columns, Rows];
-		}
-
-		public void NewGame(int columns, int rows, int numberOfMines)
+		public Game(int columns, int rows, int mineCount)
 		{
 			Columns = columns;
 			Rows = rows;
-			MineCount = numberOfMines;
-			MineCount = numberOfMines;
-			uncoveredTiles = new bool[columns, rows];
+			MineCount = mineCount;
 
-			GenerateMines();
+			var mines = GenerateMines(mineCount);
+			Field = new Tile[columns, rows];
+			UncoveredTiles = new bool[columns, rows];
+
+			foreach (var mine in mines)
+				Field[mine.x, mine.y] = Tile.Bomb;
+
+			for (int y = 0; y < rows; y++)
+				for (int x = 0; x < columns; x++)
+					if (Field[x, y] != Tile.Bomb)
+						Field[x, y] = (Tile)CountAround(x, y);
 		}
 
-		private void GenerateMines()
+		private (int x, int y)[] GenerateMines(int count)
 		{
-			Mines.Clear();
-			Mines.Capacity = MineCount;
+			HashSet<(int x, int y)> mines = new(count);
+			Random random = new();
 
-			for (int i = 0; i < MineCount; i++)
-			{
-				var mine = (
-					x: random.Next(Columns),
-					y: random.Next(Rows));
+			while (mines.Count < count)
+				mines.Add((x: random.Next(Columns), y: random.Next(Rows)));
 
-				Mines.Add(mine);
-			}
+			(int x, int y)[] minesArray = new (int x, int y)[count];
+			mines.CopyTo(minesArray);
+			return minesArray;
+		}
+
+		private int CountAround(int x, int y)
+		{
+			int xStart = Math.Max(0, x - 1);
+			int xEnd = Math.Min(Columns, x + 2);
+			int yStart = Math.Max(0, y - 1);
+			int yEnd = Math.Min(Rows, y + 2);
+
+			int count = 0;
+
+			for (int iy = yStart; iy < yEnd; iy++)
+				for (int ix = xStart; ix < xEnd; ix++)
+					if (Field[ix, iy] == Tile.Bomb)
+						count++;
+
+			return count;
 		}
 
 		public void UncoverTile(int x, int y)
 		{
-			if (uncoveredTiles[x, y]) return;
+			if (UncoveredTiles[x, y])
+				return;
 
+			UncoveredTiles[x, y] = true;
+			Tile tile = Field[x, y];
 
-			if (Mines.Contains((x, y)))
+			if (tile == Tile.Bomb) // bomb
 			{
 				State = GameState.Lost;
-				TileChangedEvent?.Invoke(x, y, Tile.SteppedOnMine);
+				TileChangedEvent?.Invoke(x, y, Textures.Tiles[(int)TileTexture.SteppedOnMine]);
 			}
-			else
+			else if (tile == Tile.Blank) // 0
 			{
-				FloodUncoverTile(x, y);
+				TileChangedEvent?.Invoke(x, y, Textures.Tiles[(int)TileTexture.UncoveredBlank]);
+				UncoverAround(x, y);
 			}
-		}
-
-		private void FloodUncoverAround(int x, int y)
-		{
-			for (int ix = x - 1; ix <= x + 1; ix++)
+			else // 1..8
 			{
-				for (int iy = y - 1; iy <= y + 1; iy++)
-				{
-					if (IsOutOfBounds(ix, iy)) continue;
-					FloodUncoverTile(ix, iy);
-				}
+				TileChangedEvent?.Invoke(x, y, Textures.Tiles[(int)tile]);
 			}
 		}
-
-		private void FloodUncoverTile(int x, int y)
+		
+		private void UncoverAround(int x, int y)
 		{
-			if (!uncoveredTiles[x, y])
+			int xStart = Math.Max(0, x - 1);
+			int xEnd = Math.Min(Columns, x + 2);
+			int yStart = Math.Max(0, y - 1);
+			int yEnd = Math.Min(Rows, y + 2);
+
+			for (int iy = yStart; iy < yEnd; iy++)
 			{
-				uncoveredTiles[x, y] = true;
-
-				int n = GetMineAmountAt(x, y);
-				TileChangedEvent?.Invoke(x, y, (Tile)n);
-
-				if (n == 0)
+				for (int ix = xStart; ix < xEnd; ix++)
 				{
-					FloodUncoverAround(x, y);
-				}
-			}
-		}
+					if (ix == x && iy == y || UncoveredTiles[ix, iy])
+						continue;
 
-		private int GetMineAmountAt(int x, int y)
-		{
-			int total = 0;
+					UncoveredTiles[ix, iy] = true;
+					Tile tile = Field[ix, iy];
 
-			for (int ix = x - 1; ix <= x + 1; ix++)
-			{
-				for (int iy = y - 1; iy <= y + 1; iy++)
-				{
-					if (Mines.Contains((ix, iy)))
+					if (tile == Tile.Blank) // 0
 					{
-						total++;
+						TileChangedEvent?.Invoke(ix, iy, Textures.Tiles[(int)TileTexture.UncoveredBlank]);
+						UncoverAround(ix, iy);
+					}
+					else // 1..8
+					{
+						TileChangedEvent?.Invoke(ix, iy, Textures.Tiles[(int)tile]);
 					}
 				}
 			}
-
-			return total;
 		}
 
-		private bool IsOutOfBounds(int x, int y) => !(0 <= x && x < Columns && 0 <= y && y < Rows);
+		public bool IsTileUncovered((int x, int y) position) => UncoveredTiles[position.x, position.y];
 	}
 }

@@ -1,8 +1,8 @@
 ﻿namespace YetAnotherMinesweeperClone.Texture
 {
-	public enum Tile
+	public enum TileTexture
 	{
-		Uncovered0,
+		UncoveredBlank,
 		Uncovered1,
 		Uncovered2,
 		Uncovered3,

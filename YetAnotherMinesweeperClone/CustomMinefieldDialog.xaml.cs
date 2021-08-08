@@ -31,17 +31,17 @@ namespace YetAnotherMinesweeperClone
 			}
 		}
 
-		private bool ValidateText(string text, int min, int max, string field)
+		private bool ValidateText(string text, int min, int max, string fieldName)
 		{
 			if (!int.TryParse(text, out int result))
 			{
-				MessageBox.Show("Input is not a number: " + field);
+				MessageBox.Show("Input is not a number: " + fieldName);
 				return false;
 			}
 
 			if (result < min || result > max)
 			{
-				MessageBox.Show("Input out of range: " + field);
+				MessageBox.Show("Input out of range: " + fieldName);
 				return false;
 			}
 
